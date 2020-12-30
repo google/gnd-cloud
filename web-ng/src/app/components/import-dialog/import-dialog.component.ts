@@ -49,18 +49,23 @@ export class ImportDialogComponent {
     });
   }
 
-  private importCsv() {
-    const files = this.uploadForm.get('file')?.value;
-    if (!files || files.length === 0) {
-      console.error('File missing');
-      return;
-    }
-    this.dataImportService
-      .importCsv(this.projectId, this.layerId, files[0] as File)
-      .subscribe(
-        // TODO(#528): Show upload progress and success/error message to user.
-        res => console.log(res),
-        err => console.log(err)
+  private async importCsv() {
+    try {
+      const files = this.uploadForm.get('file')?.value;
+      if (!files || files.length === 0) {
+        console.error('File missing');
+        return;
+      }
+      // TODO(#528): Show upload progress and success/error message to user.
+      await this.dataImportService.importCsv(
+        this.projectId,
+        this.layerId,
+        files[0] as File
       );
+    } catch (error) {
+      console.error(error);
+      // TODO: Friendlier error message.
+      alert('Import failed. See logs for details.');
+    }
   }
 }

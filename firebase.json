@@ -7,6 +7,14 @@
     "public": "web-ng/dist/web-ng",
     "rewrites": [
       {
+        "source": "/importCsv",
+        "function": "importCsv"
+      },
+      {
+        "source": "/exportCsv",
+        "function": "exportCsv"
+      },
+      {
         "source": "**/!(*.*)",
         "destination": "/index.html"
       }

@@ -15,6 +15,7 @@
  */
 
 import { Component, Input, OnInit, OnDestroy } from '@angular/core';
+import { DataExportService } from './../../services/data-export/data-export.service';
 import { ImportDialogComponent } from '../import-dialog/import-dialog.component';
 import { Layer } from '../../shared/models/layer.model';
 import { getPinImageSource } from '../map/ground-pin';
@@ -24,7 +25,6 @@ import { MatDialog } from '@angular/material/dialog';
 import { Router } from '@angular/router';
 import { DataStoreService } from '../../services/data-store/data-store.service';
 import { NavigationService } from './../../services/router/router.service';
-import { environment } from '../../../environments/environment';
 import { Subscription } from 'rxjs';
 
 @Component({
@@ -47,6 +47,7 @@ export class LayerListItemComponent implements OnInit, OnDestroy {
     private sanitizer: DomSanitizer,
     private confirmationDialog: MatDialog,
     private importDialog: MatDialog,
+    private exportService: DataExportService,
     private router: Router,
     private dataStoreService: DataStoreService,
     private navigationService: NavigationService
@@ -128,11 +129,14 @@ export class LayerListItemComponent implements OnInit, OnDestroy {
     });
   }
 
-  getDownloadCsvUrl() {
-    return (
-      `${environment.cloudFunctionsUrl}/exportCsv?` +
-      `project=${this.projectId}&layer=${this.layer?.id}`
-    );
+  onDownloadCsv() {
+    try {
+      this.exportService.downloadCsv(this.projectId!, this.layer!.id);
+    } catch (error) {
+      console.error(error);
+      // TODO: Friendlier error message.
+      alert('Export failed. See logs for details.');
+    }
   }
 
   ngOnDestroy(): void {

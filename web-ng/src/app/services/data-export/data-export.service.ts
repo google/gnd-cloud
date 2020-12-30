@@ -15,39 +15,44 @@
  */
 
 import { AuthService } from './../auth/auth.service';
-import { environment } from '../../../environments/environment';
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
+import { environment } from '../../../environments/environment';
 
-const IMPORT_CSV_URL = `${environment.cloudFunctionsUrl}/importCsv`;
-
-export interface ImportCsvResponse {
-  message?: string;
-}
+const EXPORT_CSV_URL = `${environment.cloudFunctionsUrl}/exportCsv`;
 
 @Injectable({
   providedIn: 'root',
 })
-export class DataImportService {
+export class DataExportService {
   constructor(
     private authService: AuthService,
     private httpClient: HttpClient
   ) {}
 
-  async importCsv(
-    projectId: string,
-    layerId: string,
-    file: File
-  ): Promise<ImportCsvResponse> {
-    const formData = new FormData();
-    formData.set('project', projectId);
-    formData.set('layer', layerId);
-    formData.append('file', file);
+  /**
+   * Exports a layer to CSV and opens download in a new window.
+   */
+  async downloadCsv(projectId: string, layerId: string) {
     const headers = await this.authService.getAuthHeaders();
-    // TODO: When run on protected importCsv returns 401 with response header:
-    // www-authenticate: Bearer error="invalid_token" error_description="The access token could not be verified"
-    return this.httpClient
-      .post<ImportCsvResponse>(IMPORT_CSV_URL, formData, { headers })
+    // TODO(#586): Stream results instead of using blob to support large files.
+    const data = await this.httpClient
+      .get(EXPORT_CSV_URL, {
+        headers,
+        params: {
+          project: projectId,
+          layer: layerId,
+        },
+        responseType: 'blob',
+      })
       .toPromise();
+    const blob = new Blob([data], { type: 'text/csv' });
+    const url = window.URL.createObjectURL(blob);
+    const downloadWindow = window.open(url);
+    if (!downloadWindow || downloadWindow.closed) {
+      alert(
+        'Download blocked. Please disable your pop-up blocker and try again'
+      );
+    }
   }
 }

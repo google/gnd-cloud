@@ -1,4 +1,3 @@
-import { DataStoreService } from './../../services/data-store/data-store.service';
 /**
  * Copyright 2020 Google LLC
  *
@@ -16,7 +15,8 @@ import { DataStoreService } from './../../services/data-store/data-store.service
  */
 
 import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
-
+import { DataExportService } from './../../services/data-export/data-export.service';
+import { DataStoreService } from './../../services/data-store/data-store.service';
 import { ObservationFormComponent } from './observation-form.component';
 import { Feature, LocationFeature } from '../../shared/models/feature.model';
 import { never, of, Subject } from 'rxjs';
@@ -190,6 +190,7 @@ describe('ObservationFormComponent', () => {
           LayerListItemModule,
         ],
         providers: [
+          { provide: DataExportService, useValue: {} },
           { provide: DataStoreService, useValue: {} },
           { provide: FeatureService, useValue: featureService },
           { provide: ProjectService, useValue: projectService },

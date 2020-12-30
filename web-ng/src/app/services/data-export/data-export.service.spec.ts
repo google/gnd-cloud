@@ -14,25 +14,22 @@
  * limitations under the License.
  */
 
+import { AuthService } from './../auth/auth.service';
+import { DataExportService } from './data-export.service';
+import { HttpClient } from '@angular/common/http';
 import { TestBed } from '@angular/core/testing';
 
-import { AuthService } from './../auth/auth.service';
-import { DataImportService } from './data-import.service';
-import { HttpClient } from '@angular/common/http';
-import { MatDialogModule } from '@angular/material/dialog';
-
-describe('DataImportService', () => {
-  let service: DataImportService;
+describe('DataExportService', () => {
+  let service: DataExportService;
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      imports: [MatDialogModule],
       providers: [
         { provide: AuthService, useValue: {} },
         { provide: HttpClient, useValue: {} },
       ],
     });
-    service = TestBed.inject(DataImportService);
+    service = TestBed.inject(DataExportService);
   });
 
   it('should be created', () => {

@@ -15,6 +15,7 @@
  */
 
 import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
+import { DataExportService } from './../../services/data-export/data-export.service';
 import { DataStoreService } from './../../services/data-store/data-store.service';
 import { LayerListItemComponent } from './layer-list-item.component';
 import { MatIconModule } from '@angular/material/icon';
@@ -40,6 +41,7 @@ describe('LayerListItemComponent', () => {
         declarations: [LayerListItemComponent],
         imports: [MatIconModule, MatListModule, MatMenuModule, MatDialogModule],
         providers: [
+          { provide: DataExportService, useValue: {} },
           { provide: DataStoreService, useValue: {} },
           { provide: NavigationService, useValue: navigationService },
           { provide: Router, useValue: {} },

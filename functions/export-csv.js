@@ -86,7 +86,6 @@ async function exportCsv(req, res) {
       row.push(location["_longitude"] || "");
       const responses = observation["responses"] || {};
       elements.forEach((element) => {
-        console.log(element.id, observation);
         row.push(responses[element.id] || "");
       });
       csvStream.write(row);

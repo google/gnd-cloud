@@ -76,4 +76,24 @@ export class AuthService {
     await this.afAuth.signOut();
     return this.router.navigate(['/']);
   }
+
+  /**
+   * Returns a fresh JSON Web Token (JWT) used to identify the user to a
+   * Firebase service.
+   */
+  private async getIdToken(): Promise<string> {
+    const user = await this.afAuth.currentUser;
+    return await user!.getIdToken(/* forceRefresh */ true);
+  }
+
+  /**
+   * Returns headers required for authenticated HTTPS access, including a valid
+   * auth token for the currently logged in user.
+   */
+  public async getAuthHeaders(): Promise<{ [header: string]: string }> {
+    const idToken = await this.getIdToken();
+    return {
+      Authorization: `Bearer ${idToken}`,
+    };
+  }
 }

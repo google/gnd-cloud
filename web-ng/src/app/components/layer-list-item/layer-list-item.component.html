@@ -40,12 +40,10 @@ limitations under the License.
           <mat-icon>cloud_upload</mat-icon>
           <span>Import CSV</span>
         </button>
-        <a class="download" [href]="getDownloadCsvUrl()" target="_blank">
-          <button mat-menu-item>
-            <mat-icon>cloud_download</mat-icon>
-            <span>Download CSV</span>
-          </button>
-        </a>
+        <button mat-menu-item (click)="onDownloadCsv()">
+          <mat-icon>cloud_download</mat-icon>
+          <span>Download CSV</span>
+        </button>
         <button mat-menu-item (click)="onDeleteLayer()">
           <mat-icon>delete_forever</mat-icon>
           <span>Delete</span>
