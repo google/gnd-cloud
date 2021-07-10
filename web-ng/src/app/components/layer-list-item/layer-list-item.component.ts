@@ -131,6 +131,13 @@ export class LayerListItemComponent implements OnInit, OnDestroy {
     );
   }
 
+  onLayerListSelect(): void | undefined {
+    if (!this.layer?.id) {
+      return;
+    }
+    this.navigationService.selectLayerFeature(this.layer.id);
+  }
+
   ngOnDestroy(): void {
     this.subscription.unsubscribe();
   }

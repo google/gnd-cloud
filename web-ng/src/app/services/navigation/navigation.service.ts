@@ -30,6 +30,7 @@ import { HttpParams } from '@angular/common/http';
 export class NavigationService {
   private static readonly LAYER_ID_FRAGMENT_PARAM = 'l';
   private static readonly FEATURE_ID_FRAGMENT_PARAM = 'f';
+  private static readonly FEATURE_LAYER_ID_FRAGMENT_PARAM = 'fl';
   private static readonly OBSERVATION_ID_FRAGMENT_PARAM = 'o';
   static readonly LAYER_ID_NEW = 'new';
   static readonly OBSERVATION_ID_NEW = 'new';
@@ -44,6 +45,9 @@ export class NavigationService {
     }
     if (params.get(NavigationService.FEATURE_ID_FRAGMENT_PARAM)) {
       return SideNavMode.FEATURE;
+    }
+    if (params.get(NavigationService.FEATURE_LAYER_ID_FRAGMENT_PARAM)) {
+      return SideNavMode.FEATURE_LIST;
     }
     return SideNavMode.LAYER_LIST;
   }
@@ -151,6 +155,12 @@ export class NavigationService {
     this.setFragmentParams(new HttpParams({ fromObject: newParam }));
   }
 
+  selectLayerFeature(id: string) {
+    const newParam: { [key: string]: string } = {};
+    newParam[NavigationService.FEATURE_LAYER_ID_FRAGMENT_PARAM] = id;
+    this.setFragmentParams(new HttpParams({ fromObject: newParam }));
+  }
+
   clearFeatureId() {
     this.setFragmentParams(new HttpParams({ fromString: '' }));
   }
@@ -229,4 +239,5 @@ export enum SideNavMode {
   LAYER_LIST = 1,
   OBSERVATION = 2,
   FEATURE = 3,
+  FEATURE_LIST = 4,
 }

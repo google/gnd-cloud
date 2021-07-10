@@ -20,6 +20,7 @@ import { SidePanelComponent } from './side-panel.component';
 import { FeaturePanelModule } from '../feature-panel/feature-panel.module';
 import { LayerListModule } from '../layer-list/layer-list.module';
 import { ObservationFormModule } from '../observation-form/observation-form.module';
+import { FeatureListModule } from '../feature-list/feature-list.module';
 
 @NgModule({
   imports: [
@@ -27,6 +28,7 @@ import { ObservationFormModule } from '../observation-form/observation-form.modu
     FeaturePanelModule,
     LayerListModule,
     ObservationFormModule,
+    FeatureListModule,
   ],
   exports: [SidePanelComponent],
   declarations: [SidePanelComponent],
