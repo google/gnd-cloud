@@ -26,10 +26,14 @@ import { Option } from '../form/option.model';
  *   2: "MULTIPLE_CHOICE",
  *   3: "PHOTO",
  *   4: "NUMBER",
+ *   5: "DATE",
+ *   6: "TIME",
  *   TEXT: 1,
  *   MULTIPLE_CHOICE: 2,
  *   PHOTO: 3,
  *   NUMBER: 4,
+ *   DATE: 5,
+ *   TIME: 6,
  * }
  *
  * So to convert string to enum use:
@@ -42,6 +46,8 @@ export enum FieldType {
   MULTIPLE_CHOICE = 2,
   PHOTO = 3,
   NUMBER = 4,
+  DATE = 5,
+  TIME = 6,
 }
 
 // TODO: add a subclass of Field for each field type.

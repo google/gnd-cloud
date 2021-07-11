@@ -140,6 +140,16 @@ export class FormFieldEditorComponent implements OnInit, OnChanges, OnDestroy {
         label: 'Number',
         type: FieldType.NUMBER,
       },
+      {
+        icon: 'calendar_today',
+        label: 'Date',
+        type: FieldType.DATE,
+      },
+      {
+        icon: 'access_time',
+        label: 'Time',
+        type: FieldType.TIME,
+      },
     ];
     this.formGroup = this.formBuilder.group({
       label: ['', this.validateLabel.bind(this)],
