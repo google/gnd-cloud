@@ -28,6 +28,7 @@ import {
   Feature,
   LocationFeature,
   GeoJsonFeature,
+  PolygonFeature,
 } from '../models/feature.model';
 import { Observation } from '../models/observation/observation.model';
 import { Option } from '../../shared/models/form/option.model';
@@ -208,6 +209,12 @@ export class FirebaseDataConverter {
       return {
         layerId,
         geoJson,
+      };
+    } else if (feature instanceof PolygonFeature) {
+      const { layerId, polygonVertices } = feature;
+      return {
+        layerId,
+        polygonVertices,
       };
     } else {
       throw new Error(
@@ -390,10 +397,14 @@ export class FirebaseDataConverter {
         const geoJson = JSON.parse(data.geoJson);
         return new GeoJsonFeature(id, data.layerId, geoJson);
       }
+      if (this.isPolygonFeature(data)) {
+        return new PolygonFeature(id, data.layerId, data.geometry.coordinates);
+      }
       throw new Error('Missing location and geoJson');
     } catch (err) {
       console.error(`Invalid feature ${id}, ${err}`);
     }
+    console.warn(`Invalid feature ${id} in remote data store ignored`);
     return;
   }
 
@@ -577,5 +588,8 @@ export class FirebaseDataConverter {
 
   private static isGeoJsonFeature(data: DocumentData): boolean {
     return data?.geoJson;
+  }
+  private static isPolygonFeature(data: DocumentData): boolean {
+    return data?.geometry;
   }
 }

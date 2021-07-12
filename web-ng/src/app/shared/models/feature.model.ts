@@ -37,3 +37,11 @@ export class GeoJsonFeature implements Feature {
     readonly geoJson: object
   ) {}
 }
+
+export class PolygonFeature implements Feature {
+  constructor(
+    readonly id: string,
+    readonly layerId: string,
+    readonly polygonVertices: firebase.firestore.GeoPoint[]
+  ) {}
+}
