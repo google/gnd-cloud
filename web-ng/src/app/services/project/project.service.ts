@@ -71,6 +71,10 @@ export class ProjectService {
     return this.activeProject$;
   }
 
+  getAllProjects$(): Observable<Project[]> {
+    return this.dataStore.loadAllProject$();
+  }
+
   /**
    * Updates the project with new title by calling the data-store service.
    *
@@ -123,23 +127,14 @@ export class ProjectService {
   }
 
   /**
-   * Checks if a user can add points to a specific layer.
+   * Returns the acl of the project.
    */
-  canUserAddPointsToLayer(layer: Layer): boolean {
-    const user = this.authService.getCurrentUser();
-    if (!user) {
-      return false;
-    }
-    const userRole = this.currentProject.acl.get(user.email);
-    switch (userRole) {
-      case Role.OWNER:
-      case Role.MANAGER:
-        return true;
-      case Role.CONTRIBUTOR:
-        return layer.contributorsCanAdd?.includes('points') ?? false;
-      case Role.VIEWER:
-      default:
-        return false;
-    }
+  getProjectAcl(project: Project): AclEntry[] {
+    return project?.acl
+      .entrySeq()
+      .map(entry => new AclEntry(entry[0], entry[1]))
+      .toList()
+      .sortBy(entry => entry.email)
+      .toArray();
   }
 }

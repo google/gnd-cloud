@@ -56,7 +56,7 @@ export class AuthGuard implements CanActivate {
       if (!user.isAuthenticated) {
         return true;
       }
-      this.navigationService.newProject();
+      this.navigationService.viewProjects();
       return false;
     }
     if (user.isAuthenticated) {

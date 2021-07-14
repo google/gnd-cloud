@@ -40,7 +40,7 @@ export class SignInPageComponent implements OnInit, OnDestroy {
       this.authService
         .isAuthenticated$()
         .pipe(filter(isAuth => isAuth))
-        .subscribe(() => this.navigationService.newProject())
+        .subscribe(() => this.navigationService.viewProjects())
     );
   }
 

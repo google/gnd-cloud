@@ -24,6 +24,10 @@ import { AngularFireAuth } from '@angular/fire/auth';
 import { map } from 'rxjs/operators';
 import { shareReplay } from 'rxjs/operators';
 import { NavigationService } from '../navigation/navigation.service';
+import { AclEntry } from '../../shared/models/acl-entry.model';
+import { Layer } from '../../shared/models/layer.model';
+import { Project } from '../../shared/models/project.model';
+import { Role } from '../../shared/models/role.model';
 
 const ANONYMOUS_USER: User = {
   id: '',
@@ -80,5 +84,38 @@ export class AuthService {
   async signOut() {
     await this.afAuth.signOut();
     return this.navigationService.signOut();
+  }
+
+  /**
+   * Checks if a user has manager or owner level permissions of the project.
+   */
+  canManageProject(acl: AclEntry[]): boolean {
+    const userEmail = this.currentUser?.email;
+    return !!acl.find(entry => entry.email === userEmail && entry.isManager());
+  }
+
+  /**
+   * Checks if a user can add points to a specific layer.
+   */
+  canUserAddPointsToLayer(project: Project, layer: Layer): boolean {
+    const user = this.getCurrentUser();
+    if (!user) {
+      return false;
+    }
+    const userRole: Role = project.acl.get(user.email)!;
+
+    return (
+      this.isManager(userRole) ||
+      (this.isContributor(userRole) &&
+        (layer.contributorsCanAdd?.includes('points') ?? false))
+    );
+  }
+
+  isManager(role: Role): boolean {
+    return [Role.OWNER, Role.MANAGER].includes(role);
+  }
+
+  isContributor(role: Role): boolean {
+    return [Role.CONTRIBUTOR].includes(role);
   }
 }

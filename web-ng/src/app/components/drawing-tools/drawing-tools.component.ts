@@ -34,6 +34,8 @@ import { map } from 'rxjs/internal/operators/map';
 import { getPinImageSource } from '../map/ground-pin';
 import { DomSanitizer, SafeUrl } from '@angular/platform-browser';
 import { NavigationService } from '../../services/navigation/navigation.service';
+import { AuthService } from '../../services/auth/auth.service';
+import { Project } from '../../shared/models/project.model';
 
 @Component({
   selector: 'ground-drawing-tools',
@@ -48,6 +50,7 @@ export class DrawingToolsComponent implements OnInit, OnDestroy {
   selectedValue = '';
   private lastSelectedValue = '';
   selectedLayerId = '';
+  private activeProject!: Project;
   readonly layers$: Observable<List<Layer>>;
   readonly lang: string;
   readonly black = '#202225';
@@ -67,7 +70,8 @@ export class DrawingToolsComponent implements OnInit, OnDestroy {
     private drawingToolsService: DrawingToolsService,
     private sanitizer: DomSanitizer,
     private navigationService: NavigationService,
-    projectService: ProjectService
+    projectService: ProjectService,
+    authService: AuthService
   ) {
     this.isObservationSelected$ = this.navigationService
       .getObservationId$()
@@ -77,13 +81,16 @@ export class DrawingToolsComponent implements OnInit, OnDestroy {
     this.lang = 'en';
     this.layers$ = projectService.getActiveProject$().pipe(
       tap(project => {
+        this.activeProject = project;
         this.selectedLayerId = project.layers.keySeq().first();
         this.drawingToolsService.setSelectedLayerId(this.selectedLayerId);
       }),
       map(project =>
         List(project.layers.valueSeq().toArray())
           .sortBy(l => l.index)
-          .filter(l => projectService.canUserAddPointsToLayer(l))
+          .filter(l =>
+            authService.canUserAddPointsToLayer(this.activeProject, l)
+          )
       )
     );
   }
